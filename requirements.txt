@@ -1,0 +1,4 @@
+dhooks
+keyboard
+pyperclip
+python-dotenv
