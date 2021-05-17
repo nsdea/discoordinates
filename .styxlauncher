@@ -1,0 +1,3 @@
+VERSION=1.2
+REPO=nsde/discoordinates
+INFO=Sends your Minecraft coordinates via key press to a Minecraft webhook.

@@ -3,9 +3,13 @@ import time
 import tkinter
 import keyboard
 import pyperclip
+import webbrowser
+
+import tkinter.messagebox
 
 from dotenv import load_dotenv
 from dhooks import Webhook, Embed
+from mojang import MojangAPI
 
 globals()['posname'] = 'Position'
 
@@ -119,8 +123,16 @@ def send(author, url, parsed, ask_name):
     embed.set_author(name=author)
 
     xyz = f"{parsed['x']} {parsed['y']} {parsed['z']}"
-
     embed.add_field(name='XYZ', value=xyz, inline=False)
+
+    if parsed['dimension'] not in ['the_nether', 'the_end', 'world_the_nether', 'world_the_end']:
+        nether_xyz = f"{round(parsed['x']/8)} {parsed['y']} {round(parsed['z']/8)}"
+        embed.add_field(name='Nether XYZ', value=nether_xyz, inline=False)
+    
+    elif parsed['dimension'] in ['the_nether', 'world_the_nether']:
+        overworld_xyz = f"{parsed['x']*8} {parsed['y']} {parsed['z']*8}"
+        embed.add_field(name='Overworld XYZ', value=overworld_xyz, inline=False)
+
     embed.add_field(name='Dimension', value=parsed['dimension'], inline=False)
     embed.set_footer(text='Sent by DisCoordinates')
     embed.set_thumbnail(img)
@@ -129,7 +141,6 @@ def send(author, url, parsed, ask_name):
 
 def parse(command):
     parsed = {}
-
 
     if command.startswith('/execute in minecraft:'):
         try:
@@ -146,19 +157,71 @@ def parse(command):
 
     return parsed
 
-if __name__ == '__main__':
-    load_dotenv()
 
-    def run():
-        author_name = os.getenv('AUTHOR')
-        hook_url = os.getenv('WEBHOOK')
-        ask_name = os.getenv('POPUP')
+load_dotenv()
 
-        command = pyperclip.paste()
-        parsed = parse(command)
-        send(author_name, hook_url, parsed=parsed, ask_name=ask_name)
+try:
+   open('.env')
+except:
+    try:
+        open('discoordinates/.env')
+    except:
+        print('ERROR - No valid .env file.')
 
-    while True:
-        if keyboard.is_pressed('F3') and keyboard.is_pressed('C'):
-            time.sleep(0.1)
-            run()
+        win = tkinter.Tk()
+        win.title('DisCoordinates Setup')
+
+        def helpsetup():
+            tkinter.messagebox.showinfo('Info', 'Please ignore the sections telling you to create a .env file if this is the first time you get this popup.\n\nThis is because this setup will automatically create such file.')
+            webbrowser.open('https://github.com/nsde/discoordinates/blob/main/README.md')
+
+        tkinter.Button(win, text='Help', command=helpsetup).pack()
+
+        tkinter.Label(win, text='\nYour Minecraft name:').pack()
+
+        mcname = tkinter.Entry(win)
+        mcname.pack()
+
+        tkinter.Label(win, text='Webhook URL:').pack()
+
+        hurl = tkinter.Entry(win)
+        hurl.pack()
+
+        tkinter.Label(win, text='Popup Mode:').pack()
+
+        pmode = tkinter.Entry(win)
+        pmode.pack()
+
+        def setup():
+            if not MojangAPI.get_uuid(mcname.get()):
+                tkinter.messagebox.showerror('Error', 'Please input a correct Minecraft username.')
+                return
+
+            if not hurl.get().startswith('https://discord.com/api/webhooks/'):
+                if tkinter.messagebox.askyesno('Warning', 'The entered Webhook URL does not seem correct. Try again?'):
+                    return
+            
+            if not pmode.get() in ['FULL', 'ON', 'OFF']:
+                tkinter.messagebox.showerror('Error', 'Popup Mode can only be FULL or ON or OFF.')
+                return
+
+            open('.env', 'w').write(f'''AUTHOR={mcname.get()}\nWEBHOOK={hurl.get()}\nPOPUP={pmode.get()}''')
+            win.destroy()
+
+        tkinter.Button(win, text='OK', command=setup).pack()
+
+        win.mainloop()
+
+def run():
+    author_name = os.getenv('AUTHOR')
+    hook_url = os.getenv('WEBHOOK')
+    ask_name = os.getenv('POPUP')
+
+    command = pyperclip.paste()
+    parsed = parse(command)
+    send(author_name, hook_url, parsed=parsed, ask_name=ask_name)
+
+while True:
+    if keyboard.is_pressed('F3') and keyboard.is_pressed('C'):
+        time.sleep(0.1)
+        run()

@@ -1,5 +1,10 @@
+> **✅ StyxLauncher Support**
+
 # DisCoordinates
 Sends your Minecraft coordinates via key press to a Minecraft webhook.
+This basically is just an updated version of my project https://github.com/nsde/MineCords
+
+No mods, no client, no plugins, no resourcepack, no anything. Just this program and **Minecraft 1.13+** (lower versions don't work!).
 
 # How to create a Discord webhook
 1. Go to a Discord channel whose you have the permissions to add webhooks ("intergrations") to (to make sure, please test this out in a server where you have admin). I recommend creating a new channel and name it "mc-coordinates" or something like that, so the users know that the channel is about.
@@ -68,4 +73,6 @@ POPUP=FULL
 3. Now, a message should be sent to a Discord webhook, and a message should appear in the connected channel displaying information about your current location and dimension.
 
 # Help
-If you have any problems, make sure you are using Windows 10 (if you set the popup mode to FULL), and you didn't press the enter key in the popup (if you didn't set the popup mode to OFF). Additionally, check your env file.
+If you have any problems, make sure you are using **Windows 10** (if you set the popup mode to FULL), and you didn't press the enter key in the popup (if you didn't set the popup mode to OFF). Additionally, **check your `.env`** file.
+
+If your **game crashes** when pressing F3+C, check your Minecraft version is above 1.13! Check https://minecraft.fandom.com/wiki/Debug_screen#History for info.
