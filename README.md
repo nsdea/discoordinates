@@ -1,4 +1,4 @@
-> **✅ StyxLauncher Support**
+> **✅ StyxLauncher Support ・🔨 Low CPU usage**
 
 # DisCoordinates
 Sends your Minecraft coordinates via key press to a Minecraft webhook.
@@ -76,3 +76,14 @@ POPUP=FULL
 If you have any problems, make sure you are using **Windows 10** (if you set the popup mode to FULL), and you didn't press the enter key in the popup (if you didn't set the popup mode to OFF). Additionally, **check your `.env`** file.
 
 If your **game crashes** when pressing F3+C, check your Minecraft version is above 1.13! Check https://minecraft.fandom.com/wiki/Debug_screen#History for info.
+
+
+# News
+**Version 1.1** (17.05.2021)
+- **Lowererd CPU usage** from (approx.) 25-15& to - not joking - 0%! The program is being runned in the background and using events instead of checking if specific keys are pressed non-stop.
+
+- Added **Nether coordinates info**
+
+- Added **StyxLauncher support**
+
+***

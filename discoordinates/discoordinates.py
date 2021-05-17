@@ -126,11 +126,11 @@ def send(author, url, parsed, ask_name):
     embed.add_field(name='XYZ', value=xyz, inline=False)
 
     if parsed['dimension'] not in ['the_nether', 'the_end', 'world_the_nether', 'world_the_end']:
-        nether_xyz = f"{round(parsed['x']/8)} {parsed['y']} {round(parsed['z']/8)}"
+        nether_xyz = f"{float(parsed['x'])/8} {parsed['y']} {float(parsed['z'])/8}"
         embed.add_field(name='Nether XYZ', value=nether_xyz, inline=False)
     
     elif parsed['dimension'] in ['the_nether', 'world_the_nether']:
-        overworld_xyz = f"{parsed['x']*8} {parsed['y']} {parsed['z']*8}"
+        overworld_xyz = f"{float(parsed['x'])*8} {parsed['y']} {float(parsed['z'])*8}"
         embed.add_field(name='Overworld XYZ', value=overworld_xyz, inline=False)
 
     embed.add_field(name='Dimension', value=parsed['dimension'], inline=False)
@@ -213,6 +213,8 @@ except:
         win.mainloop()
 
 def run():
+    time.sleep(0.1)
+
     author_name = os.getenv('AUTHOR')
     hook_url = os.getenv('WEBHOOK')
     ask_name = os.getenv('POPUP')
@@ -221,7 +223,11 @@ def run():
     parsed = parse(command)
     send(author_name, hook_url, parsed=parsed, ask_name=ask_name)
 
-while True:
-    if keyboard.is_pressed('F3') and keyboard.is_pressed('C'):
-        time.sleep(0.1)
+def pressed(x): #x is a unused given parameter
+    if keyboard.is_pressed('F3'):
         run()
+
+keyboard.on_press_key('C', pressed)
+
+while True:
+    time.sleep(60)
